@@ -1,14 +1,17 @@
-#UID_SARJATAULUKKO <- 
-# input_Turnaus_NO <- 11
-# input_BO_mode <- TRUE
-# 
-# testres <- UID_SARJATAULUKKO(27, TRUE, ADM_PELIT, STG_PAKAT)
+#UID_SARJATAULUKKO <-
+# input_Turnaus_NO <- 42
+# input_BO_mode <- FALSE
+# required_data(c("STG_PAKAT", "STG_PELISTATSIT"))
+# required_functions("BO_conversio")
+# testres <- UID_SARJATAULUKKO(27, TRUE, STG_PELISTATSIT, STG_PAKAT)
 # testres
-UID_SARJATAULUKKO <- function(input_Turnaus_NO, input_BO_mode, ADM_PELIT, STG_PAKAT, input_total_mode = FALSE) {
+# ADM_PELIT <- STG_PELISTATSIT
+
+UID_SARJATAULUKKO <- function(input_BO_mode, ADM_PELIT, STG_PAKAT) {
   required_functions("BO_conversio")
-  
 
 
+  input_total_mode <-  FALSE
 
   if (input_BO_mode == FALSE) {
     turnausData_temp <- ADM_PELIT[1 == 1]
@@ -21,18 +24,10 @@ UID_SARJATAULUKKO <- function(input_Turnaus_NO, input_BO_mode, ADM_PELIT, STG_PA
   if(is.null(input_total_mode)) {
     input_total_mode <- FALSE
   }
-  if (input_total_mode == FALSE) {
-    if(is.null(input_Turnaus_NO)) {
-      
-      input_Turnaus_NO <- turnausData_temp[, max(Turnaus_NO)]
-    }
-    turnausData <- turnausData_temp[Turnaus_NO == input_Turnaus_NO]
-  } else {
-    turnausData <- turnausData_temp
-  }
-  
+
+  turnausData <- turnausData_temp
  # print(turnausData[, Voittaja])
-  
+
   sspakat <- STG_PAKAT[ Side == 0, .(Pakka_NM, Pakka_ID)]
   joinPakat <- sspakat[turnausData, on = .(Pakka_ID)]
     divarit <- joinPakat[, .N, by = Divari][, N := NULL]
@@ -43,7 +38,7 @@ UID_SARJATAULUKKO <- function(input_Turnaus_NO, input_BO_mode, ADM_PELIT, STG_PA
                                                                       Matches = sum(!is.na(Voittaja)),
                                                                       Wins = sum(Voittaja, na.rm = TRUE),
                                                                         Draws = sum(Tasapeli, na.rm = TRUE)
-                                                                      
+
                                                                         ), by = .(Pakka_ID, Pakka_NM, Divari, Omistaja_ID)]
     divari_List[[listNM]][, ':=' (Losses = Matches - Wins - Draws,
                                Score = (Wins + Draws * 0.5),
