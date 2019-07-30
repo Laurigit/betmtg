@@ -17,19 +17,3 @@ observe( {
   }
 })
 
-
-# call login module supplying data frame, user and password cols
-# and reactive trigger
-required_data("ADM_USER_LOGIN")
-credentials <- callModule(shinyauthr::login,
-                          id = "login",
-                          data = ADM_USER_LOGIN,
-                          user_col = user,
-                          pwd_col = password,
-                          log_out = reactive(logout_init()))
-logout_init <- callModule(shinyauthr::logout,
-                          id = "logout",
-                          active = reactive(credentials()$user_auth))
-user_data <- reactive({credentials()$info})
-
-

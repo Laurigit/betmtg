@@ -4,6 +4,10 @@ tabItem(tabName = "tab_login",
         fluidPage(
 #add logout button UI
 
+          # must turn shinyjs on
+          shinyjs::useShinyjs(),
+
+
 #add login panel UI function
 fluidRow(shinyauthr::loginUI(id = "login")),
 fluidRow(h3("New user sign-up")),

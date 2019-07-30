@@ -39,7 +39,8 @@ uusi_peli <- dashboardBody(
 
   source("./scripts/ui/ui_overlay.R",local = TRUE)$value,
   source("./scripts/ui/ui_login.R",local = TRUE)$value,
-  source("./scripts/ui/ui_betting.R",local = TRUE)$value
+  source("./scripts/ui/ui_betting.R",local = TRUE)$value,
+  source("./scripts/ui/ui_leaderboard.R",local = TRUE)$value
 
 
   ))
@@ -55,14 +56,14 @@ sidebar <- dashboardSidebar(
               menuItem("Login", icon = icon("server"), tabName = "tab_login"),
               menuItem("Overlay", icon = icon("server"), tabName = "tab_overlay"),
               menuItem("Betting", icon = icon("server"), tabName = "tab_betting"),
-
+              menuItem("Leaderboard", icon = icon("server"), tabName = "tab_leaderboard"),
               # actionButton("automated_tests", label = h5("Run tests")),
            #  actionButton("refresh", label = "Update data"),
              #radioButtons("radio_total_mode", label = h5("Total mode"),choices = list("Pois" = FALSE, "Paalla" = TRUE), selected = FALSE,inline=T),
 
              #radioButtons("radio_debug_mode", label = h5("Debug"),choices = list("Pois" = FALSE, "Paalla" = TRUE), selected = FALSE,inline=T),
                #div(style="display:inline-block;width:90%;text-align: center;",uiOutput("sarjataulukkovalitsin")),
-           div(class = "pull-right", shinyauthr::logoutUI(id = "logout"))
+           div(class = "pull-left", shinyauthr::logoutUI(id = "logout"))
               #menuSubItem(icon = NULL,actionButton("luo_peleja","Luo uudet pelit"))
   )
 

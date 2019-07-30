@@ -23,7 +23,9 @@ observe({
   nextGame_for_betting <- as.character(file.info("../common_data/next_game_ID.csv")$mtime)
 
   next_peli_ID <- rc("next_game_ID.csv")[, Peli_ID]
-
+  if (is.na(next_peli_ID)) {
+    next_peli_ID <- 0
+  }
 
   if (closeBetting_file != fileUpdates_betting$closeBetting_file) {
 
@@ -66,10 +68,19 @@ output$openBetsRadio <- renderUI({
   #tää ei päivity ilman käsyä
   revUpdate("ADM_AVAILABLE_BETS_OPEN")
   looppiData <- ADM_AVAILABLE_BETS_OPEN
+  open_bets <- TRUE
+  if (nrow(looppiData) == 0) {
+    looppiData <- data.table(PELI_ID = 0, T1_NAME = "NO", T2_NAME = "OPEN", closing = "GAMES TO BET")
+    open_bets <- FALSE
+  }
   looppiData[, teksti := paste0(T1_NAME, " VS ", T2_NAME)]
-
+    if(open_bets == TRUE) {
+      shinyjs::enable("buttonSaveBet")
       radioButtons("radio_available_bets", label = "Choose game to bet", choiceNames = looppiData[, teksti], choiceValues = looppiData[, PELI_ID])
-
+    } else {
+      HTML("No open bets")
+      shinyjs::disable("buttonSaveBet")
+    }
 
 
 })

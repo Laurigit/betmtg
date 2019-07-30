@@ -11,6 +11,21 @@ user_logged <- reactiveValues(count = 0)
 
 shinyServer(function(input, output, session) {
 
+  logout_init <- callModule(shinyauthr::logout,
+                            id = "logout",
+                            active = reactive(credentials()$user_auth))
+  required_data("ADM_USER_LOGIN")
+  credentials <- callModule(shinyauthr::login,
+                            id = "login",
+                            data = ADM_USER_LOGIN,
+                            user_col = user,
+                            pwd_col = password,
+                            log_out = reactive(logout_init()))
+
+  user_data <- reactive({credentials()$info})
+isolate(print(user_data()))
+  # pulls out the user information returned from login module
+
   #load_scripts.R
  # print(session$clientData)
 
