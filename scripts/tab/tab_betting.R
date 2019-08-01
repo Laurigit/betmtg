@@ -49,9 +49,23 @@ observe({
     P2 <- STG_PELISTATSIT[Peli_ID == next_peli_ID & Omistaja_ID == "M", Pakka_NM]
 
     open_betting(next_peli_ID, now() + 1000, P1, P2)
+    generate_AI_bets(next_peli_ID)
     revUpdate("ADM_AVAILABLE_BETS_OPEN")
     }
     fileUpdates_betting$nextGame_for_betting <- nextGame_for_betting
+  }
+
+  #check if got new results
+  filelist <- data.table(filename = dir("../common_data"))
+  filelist[, file_alku := str_sub(filename, 1, 10)]
+  results <- filelist[file_alku == "Result_for", filename]
+  if (length(results) > 0 ) {
+    for (filelista in results) {
+
+      match_result <- rc(paste0("../common_data/", filelista))
+      peli_ID_input <- str_remove(str_remove(filelista, "Result_for_betting"), ".csv")
+      setBettingResult(peli_ID_input, match_result[, Voittaja])
+    }
   }
 })
 

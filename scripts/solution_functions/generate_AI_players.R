@@ -8,3 +8,4 @@ generate_AI_players <- function(){
   add_new_user("A_no_I_just_guessing", runif(1))
 
 }
+#generate_AI_players()

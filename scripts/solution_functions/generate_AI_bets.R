@@ -2,11 +2,12 @@
 # generate_AI_bets(1338)
 # open_betting(1338, now()+1000,"A", "B")
 generate_AI_bets <- function(PELI_ID) {
+
 required_data("STG_PELISTATSIT")
 pelidata <- STG_PELISTATSIT[Peli_ID == PELI_ID]
 
 #aloittaja voittaa 60%
-AI_ID <- getBID("AI_go_first_wins")
+AI_ID <- getBID("AI_go_first_wins_55%")
 aloittaja <- pelidata[Aloittaja == 1, Omistaja_ID]
 if (aloittaja == "M") {predict <- 55 } else {predict <- 45}
 make_bet(PELI_ID, AI_ID, predict)

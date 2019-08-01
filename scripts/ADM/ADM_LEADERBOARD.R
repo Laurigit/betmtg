@@ -1,6 +1,6 @@
 #ADM_LEADERBOARD
 #set_bet_result(1338, 0)
-required_data(c("ADM_BETTING_RESULTS", "STG_BETS"))
+required_data(c("ADM_BETTING_RESULTS", "STG_BETS", "STG_BETTER_DIM"))
 #revUpdate("ADM_BETTING_RESULTS")
 #revUpdate( "STG_BETS")
 join_res <- STG_BETS[ADM_BETTING_RESULTS, on = "PELI_ID"][order(PELI_ID, ODDS)]
@@ -22,7 +22,11 @@ join_res[, final_bet := ifelse(USER_BET_validate == USER_BET, USER_BET,
 sscols <- join_res[, .(final_bet, PELI_ID, RESULT, COMPETITION, BETTER_ID)]
 sscols[, pay_off := ifelse(final_bet == RESULT, (.N / sum(final_bet == RESULT)) - 1, -1), by = PELI_ID]
 
-ADM_LEADERBOARD <- sscols[, .(Score = sum(pay_off)), by = .(COMPETITION, BETTER_ID)][order(-Score)]
+
+temp_res <- sscols[, .(Score = sum(pay_off)), by = .(COMPETITION, BETTER_ID)][order(-Score)]
+userid <- STG_BETTER_DIM[, .(BETTER_ID = id, USERNAME)]
+join_username <- userid[temp_res, on = "BETTER_ID"][, BETTER_ID := NULL]
+ADM_LEADERBOARD <- join_username
 # join_res[, vaadittu_kerroin := 1 / (ODDS / 100)]
 # join_res[, pct_order := round((1 / (.N + 1) * frank(ODDS) * 100)), by = PELI_ID]
 # join_res[, order_kerroin :=  .N / (frank(ODDS)), by = PELI_ID]
